@@ -1,15 +1,9 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
-
-// Dummy reducer to prevent Redux errors
-const dummySlice = createSlice({
-  name: "dummy",
-  initialState: {},
-  reducers: {},
-});
+import { configureStore } from "@reduxjs/toolkit";
+import storeReducer from "./slices/storeSlice";
 
 export const store = configureStore({
   reducer: {
-    dummy: dummySlice.reducer,  // Adding at least one reducer
+    stores: storeReducer,
   },
 });
 
