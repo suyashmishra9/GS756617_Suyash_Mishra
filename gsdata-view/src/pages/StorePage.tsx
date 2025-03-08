@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaPlus, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 
 interface Store {
   id: number;
@@ -51,36 +51,34 @@ const Stores = () => {
               <th className="p-2 border">Store</th>
               <th className="p-2 border">City</th>
               <th className="p-2 border">State</th>
-              <th className="p-2 border">Actions</th>
             </tr>
           </thead>
           <tbody>
             {stores.map((store, index) => (
               <tr key={store.id} className="border">
-                <td className="p-2 text-center border">{index + 1}</td>
+                <td className="p-2 text-center border">
+                  <div className="flex items-center justify-between">
+                    <button onClick={() => deleteStore(store.id)} className="text-black">
+                      <FaTrash />
+                    </button>
+                    <span className="flex-1 text-center">{index + 1}</span>
+                  </div>
+                </td>
                 <td className="p-2 border">{store.name}</td>
                 <td className="p-2 border">{store.city}</td>
                 <td className="p-2 border">{store.state}</td>
-                <td className="p-2 text-center border">
-                  <button onClick={() => deleteStore(store.id)} className="text-red-500">
-                    <FaTrash />
-                  </button>
-                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Floating Button */}
       <button
-        className="fixed bottom-6 right-6 bg-orange-500 text-white p-4 rounded-full shadow-lg"
+        className="fixed bottom-6 left-70 bg-[#ffab91]  text-black px-6 py-3 rounded-full shadow-lg font-medium cursor-pointer"
         onClick={() => setShowModal(true)}
       >
-        <FaPlus />
+        New Store
       </button>
-
-      {/* Modal for Adding Store */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded shadow-lg w-96">
@@ -106,10 +104,22 @@ const Stores = () => {
               value={newStore.state}
               onChange={(e) => setNewStore({ ...newStore, state: e.target.value })}
             />
-            <div className="flex justify-end">
-              <button onClick={() => setShowModal(false)} className="mr-2">Cancel</button>
-              <button onClick={addStore} className="bg-blue-500 text-white p-2 rounded">Add</button>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setShowModal(false)}
+                className="bg-blue-500 text-white p-2 rounded cursor-pointer"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={addStore}
+                className="bg-blue-500 text-white p-2 rounded cursor-pointer"
+              >
+                Add
+              </button>
             </div>
+
           </div>
         </div>
       )}
@@ -118,4 +128,3 @@ const Stores = () => {
 };
 
 export default Stores;
-  
