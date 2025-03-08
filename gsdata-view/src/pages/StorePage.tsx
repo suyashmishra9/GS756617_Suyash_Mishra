@@ -58,10 +58,11 @@ const Stores = () => {
               <tr key={store.id} className="border">
                 <td className="p-2 text-center border">
                   <div className="flex items-center justify-between">
-                    <button onClick={() => deleteStore(store.id)} className="text-black">
+                    <button onClick={() => deleteStore(store.id)} className="text-black cursor-pointer">
                       <FaTrash />
                     </button>
-                    <span className="flex-1 text-center">{index + 1}</span>
+                    <span className="pl-2">::::</span> 
+                    <span className="flex-4 text-center">{index + 1}</span>
                   </div>
                 </td>
                 <td className="p-2 border">{store.name}</td>
