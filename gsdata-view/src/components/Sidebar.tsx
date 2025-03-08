@@ -6,7 +6,7 @@ const Sidebar = () => {
     <aside className="w-60 h-[calc(100vh-64px)] bg-gray-100 fixed top-16 left-0 p-4">
       <nav>
         <NavLink
-          to="/stores"
+          to="/"
           className={({ isActive }) =>
             `flex items-center gap-3 p-3 rounded-md text-gray-700 hover:bg-gray-200 transition ${
               isActive ? "bg-gray-300 font-semibold" : ""
@@ -18,7 +18,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/sku"
+          to="/skus"
           className={({ isActive }) =>
             `flex items-center gap-3 p-3 rounded-md text-gray-700 hover:bg-gray-200 transition ${
               isActive ? "bg-gray-300 font-semibold" : ""
@@ -42,7 +42,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/charts"
+          to="/chart"
           className={({ isActive }) =>
             `flex items-center gap-3 p-3 rounded-md text-gray-700 hover:bg-gray-200 transition ${
               isActive ? "bg-gray-300 font-semibold" : ""

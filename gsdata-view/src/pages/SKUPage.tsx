@@ -2,7 +2,7 @@
 
 function SKUPage() {
   return (
-    <div>SKUPage</div>
+    <div>SKUPage lorem500</div>
   )
 }
 

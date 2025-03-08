@@ -13,7 +13,9 @@ function App() {
           <Sidebar />
           <div className="flex-1">
             <Navbar />
+            <div className="pt-25 pl-64 p-5">
             <AppRouter />
+            </div>
           </div>
         </div>
       </BrowserRouter>
