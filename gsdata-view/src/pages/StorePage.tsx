@@ -115,7 +115,7 @@ const Stores = () => {
 
               <button
                 onClick={addStore}
-                className="bg-blue-500 text-white p-2 rounded cursor-pointer"
+                className="bg-green-400 text-white p-2 rounded cursor-pointer"
               >
                 Add
               </button>
