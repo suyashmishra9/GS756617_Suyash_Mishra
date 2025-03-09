@@ -12,7 +12,7 @@ interface StoreState {
 }
 
 const initialState: StoreState = {
-  stores: [],
+  stores: JSON.parse(localStorage.getItem("stores") || "[]"), 
 };
 
 const storeSlice = createSlice({
@@ -20,17 +20,20 @@ const storeSlice = createSlice({
   initialState,
   reducers: {
     addStore: (state, action: PayloadAction<{ name: string; city: string; state: string }>) => {
-      state.stores.push({
-        id: crypto.randomUUID(),
-        ...action.payload,
-      });
+      const newStore = { id: crypto.randomUUID(), ...action.payload };
+      state.stores.push(newStore);
+      localStorage.setItem("stores", JSON.stringify(state.stores)); 
     },
     updateStore: (state, action: PayloadAction<{ id: string; name: string; city: string; state: string }>) => {
       const store = state.stores.find((s) => s.id === action.payload.id);
-      if (store) Object.assign(store, action.payload);
+      if (store) {
+        Object.assign(store, action.payload);
+        localStorage.setItem("stores", JSON.stringify(state.stores)); 
+      }
     },
     deleteStore: (state, action: PayloadAction<string>) => {
       state.stores = state.stores.filter((s) => s.id !== action.payload);
+      localStorage.setItem("stores", JSON.stringify(state.stores)); 
     },
   },
 });
