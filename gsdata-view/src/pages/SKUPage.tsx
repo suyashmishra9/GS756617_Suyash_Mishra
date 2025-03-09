@@ -30,7 +30,7 @@ const SKUs = () => {
     </tr>
   </thead>
   <tbody>
-    {skus.map((sku, index) => (
+    {skus.map((sku) => (
       <tr key={sku.id} className="border">
         <td className="p-2 text-center border">
           <div className="flex items-center justify-between">
@@ -40,8 +40,8 @@ const SKUs = () => {
           </div>
         </td>
         <td className="p-2 border">{sku.name}</td>
-        <td className="p-2 border">{sku.price}</td>
-        <td className="p-2 border">{sku.cost}</td>
+        <td className="p-2 border">${sku.price}</td>
+        <td className="p-2 border">${sku.cost}</td>
       </tr>
     ))}
   </tbody>
