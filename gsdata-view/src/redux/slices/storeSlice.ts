@@ -12,11 +12,7 @@ interface StoreState {
 }
 
 const initialState: StoreState = {
-  stores: [
-    { id: "1", name: "Walmart", city: "New York", state: "NY" },
-    { id: "2", name: "Target", city: "Los Angeles", state: "CA" },
-    { id: "3", name: "Costco", city: "Chicago", state: "IL" },
-  ],
+  stores: [],
 };
 
 const storeSlice = createSlice({
@@ -25,19 +21,13 @@ const storeSlice = createSlice({
   reducers: {
     addStore: (state, action: PayloadAction<{ name: string; city: string; state: string }>) => {
       state.stores.push({
-        id: (state.stores.length + 1).toString(),
-        name: action.payload.name,
-        city: action.payload.city,
-        state: action.payload.state,
+        id: crypto.randomUUID(),
+        ...action.payload,
       });
     },
     updateStore: (state, action: PayloadAction<{ id: string; name: string; city: string; state: string }>) => {
       const store = state.stores.find((s) => s.id === action.payload.id);
-      if (store) {
-        store.name = action.payload.name;
-        store.city = action.payload.city;
-        store.state = action.payload.state;
-      }
+      if (store) Object.assign(store, action.payload);
     },
     deleteStore: (state, action: PayloadAction<string>) => {
       state.stores = state.stores.filter((s) => s.id !== action.payload);
