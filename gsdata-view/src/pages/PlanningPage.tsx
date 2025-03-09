@@ -1,57 +1,117 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { AgGridReact } from "ag-grid-react";
-import { ModuleRegistry } from "ag-grid-community";
-import { ClientSideRowModelModule } from "ag-grid-community";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { RootState } from "../redux/store";
- 
+import { Box } from "@mui/material";
 
-
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+interface PlanningRow {
+  id: string;
+  storeName: string;
+  skuName: string;
+  price: number;
+  cost: number;
+  salesUnit: number | "";
+  salesDollars: number | "";
+  gmDollars: number | "";
+  gmPercent: string;
+}
 
 const PlanningPage: React.FC = () => {
-  const stores = useSelector((state: RootState) => state.store?.stores);
-const skus = useSelector((state: RootState) => state.sku?.skus);
-
-  const [rowData, setRowData] = useState<any[]>([]);
+  const stores = useSelector((state: RootState) => state.store.stores);
+  const skus = useSelector((state: RootState) => state.sku.skus);
+  const [rows, setRows] = useState<PlanningRow[]>([]);
 
   useEffect(() => {
-    console.log("Stores from Redux:", stores);
-    console.log("SKUs from Redux:", skus);
     if (stores.length > 0 && skus.length > 0) {
-      const planningData = stores.flatMap((store: { id: any; name: any; }) =>
-        skus.map((sku: { id: any; name: any; price: any; cost: any; }) => ({
-          storeId: store.id,
+      const planningData: PlanningRow[] = stores.flatMap((store) =>
+        skus.map((sku) => ({
+          id: `${store.id}-${sku.id}`, 
           storeName: store.name,
-          skuId: sku.id,
           skuName: sku.name,
           price: sku.price,
           cost: sku.cost,
-          salesUnit: 0,
-          salesDollars: 0,
-          gmDollars: 0,
-          gmPercent: 0,
+          salesUnit: "",
+          salesDollars: "",
+          gmDollars: "",
+          gmPercent: "",
         }))
       );
-      setRowData(planningData);
+      setRows(planningData);
     }
   }, [stores, skus]);
 
-  const columnDefs = [
-    { headerName: "Store", field: "storeName", sortable: true },
-    { headerName: "SKU", field: "skuName" },
-    { headerName: "Sales Unit", field: "salesUnit", editable: true },
-    { headerName: "Sales Dollars", field: "salesDollars" },
-    { headerName: "GM Dollars", field: "gmDollars" },
-    { headerName: "GM %", field: "gmPercent" },
+  const processRowUpdate = (updatedRow: PlanningRow, originalRow: PlanningRow) => {
+    const salesUnit = Number(updatedRow.salesUnit) || 0;
+    const salesDollars = salesUnit * originalRow.price;
+    const gmDollars = salesDollars - salesUnit * originalRow.cost;
+    const gmPercent = salesDollars ? `${((gmDollars / salesDollars) * 100).toFixed(2)}%` : "";
+
+    const newRow: PlanningRow = { ...updatedRow, salesDollars, gmDollars, gmPercent };
+
+    setRows((prevRows) =>
+      prevRows.map((row) =>
+        row.id === originalRow.id ? { ...row, ...newRow } : row 
+      )
+    );
+
+    return newRow; 
+  };
+
+  const handleCellEdit = (params: { id: string; field: string; value: any }) => {
+    if (params.field === "salesUnit") {
+      setRows((prevRows) =>
+        prevRows.map((row) => {
+          if (row.id === params.id) {
+            const salesUnit = Number(params.value) || 0;
+            const salesDollars = salesUnit * row.price;
+            const gmDollars = salesDollars - salesUnit * row.cost;
+            const gmPercent = salesDollars ? `${((gmDollars / salesDollars) * 100).toFixed(2)}%` : "";
+
+            return { ...row, salesUnit, salesDollars, gmDollars, gmPercent };
+          }
+          return row;
+        })
+      );
+    }
+  };
+
+  const columns: GridColDef[] = [
+    { field: "storeName", headerName: "Store", width: 150 },
+    { field: "skuName", headerName: "SKU", width: 150 },
+    {
+      field: "salesUnit",
+      headerName: "Sales Unit",
+      width: 120,
+      editable: true, // ✅ Allows inline editing
+    },
+    {
+      field: "salesDollars",
+      headerName: "Sales Dollars",
+      width: 120,
+      renderCell: (params: GridRenderCellParams) => <>{params.row.salesDollars || ""}</>,
+    },
+    {
+      field: "gmDollars",
+      headerName: "GM Dollars",
+      width: 120,
+      renderCell: (params: GridRenderCellParams) => <>{params.row.gmDollars || ""}</>,
+    },
+    {
+      field: "gmPercent",
+      headerName: "GM %",
+      width: 120,
+      renderCell: (params: GridRenderCellParams) => <>{params.row.gmPercent || ""}</>,
+    },
   ];
 
   return (
-    <div className="ag-theme-alpine" style={{ height: 500, width: "100%" }}>
-      <AgGridReact rowData={rowData} columnDefs={columnDefs} />
-    </div>
+    <Box sx={{ height: 500, width: "100%" }}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        processRowUpdate={processRowUpdate} // ✅ Ensures calculations update correctly
+      />
+    </Box>
   );
 };
 
