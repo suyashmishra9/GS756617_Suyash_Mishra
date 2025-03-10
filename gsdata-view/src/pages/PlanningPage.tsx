@@ -136,7 +136,7 @@ const PlanningPage: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ height: 500, width: "100%", overflowX: "auto", position: "relative", zIndex: 0 }}>
+    <Box sx={{ height: 500, width: "100%", overflowX: "auto", position: "relative", zIndex: 1 }}>
     <DataGrid
       rows={rows}
       columns={columns}

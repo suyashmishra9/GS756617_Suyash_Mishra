@@ -3,7 +3,7 @@ import { FaStore, FaBox, FaClipboardList, FaChartBar } from "react-icons/fa";
 
 const Sidebar = () => {
   return (
-    <aside className="w-60 h-[calc(100vh-64px)] bg-gray-100 fixed top-16 left-0 p-4">
+    <aside className="w-60 h-[calc(100vh-64px)] bg-gray-100 fixed top-16 left-0 p-4 z-2">
       <nav>
         <NavLink
           to="/"
