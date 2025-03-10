@@ -5,27 +5,13 @@ React JS Challenge - GSynergy
 📋 Project Overview
 This is a Progressive Web App (PWA) built using React + TypeScript + Redux, featuring data management, visualization, and analytics. The app includes functionalities like store & SKU management, AG-Grid-based planning, and chart visualization.
 
-📂 Folder Structure
-bash
-Copy
-Edit
-/src
-│── /components  # Navbar, Sidebar, UI components
-│── /context     # Authentication Context
-│── /pages       # All major pages (Store, SKU, Planning, Chart, Login)
-│── /redux       # Redux store and slices
-│── /routes      # Protected Route (AuthGuard)
-│── /utils       # Helper functions (if any)
-│── App.tsx      # Main App component
-│── router.tsx   # App Routing Configuration
-│── index.tsx    # Entry Point
 🚀 Live Demo
 🔗 Deployed App (Add your hosting link here)
 
 ⚙️ How to Run Locally
 1️⃣ Clone the Repository
 git clone https://github.com/yourusername/GS######_YourFirstName_YourLastName.git
-cd GS######_YourFirstName_YourLastName
+cd GS756617_Suyash_Mishra
 
 2️⃣ Install Dependencies
 npm install
