@@ -55,25 +55,26 @@ const PlanningPage: React.FC = () => {
 
   const processRowUpdate = (updatedRow: PlanningRow, originalRow: PlanningRow) => {
     const newRow = { ...updatedRow };
-
+  
     weeks.forEach((week) => {
       const salesUnit = Number(newRow[`${week}_salesUnit`]) || 0;
       const salesDollars = salesUnit * originalRow.price;
       const gmDollars = salesDollars - salesUnit * originalRow.cost;
-      const gmPercent = salesDollars ? `${((gmDollars / salesDollars) * 100).toFixed(2)}` : "";
-
-      newRow[`${week}_salesDollars`] = salesDollars;
-      newRow[`${week}_gmDollars`] = gmDollars;
+      const gmPercent = salesDollars ? `${((gmDollars / salesDollars) * 100).toFixed(2)}%` : "";
+  
+      newRow[`${week}_salesDollars`] = `$${salesDollars.toFixed(2)}`;
+      newRow[`${week}_gmDollars`] = `$${gmDollars.toFixed(2)}`;
       newRow[`${week}_gmPercent`] = gmPercent;
     });
-
+  
     dispatch(updateRow(newRow));
-
+  
     const updatedRows = rows.map((row) => (row.id === originalRow.id ? newRow : row));
     localStorage.setItem("planningRows", JSON.stringify(updatedRows));
-
+  
     return newRow;
   };
+  
 
   const columns: GridColDef[] = [
     { field: "storeName", headerName: "Store", width: 150 },
