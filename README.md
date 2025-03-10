@@ -6,7 +6,8 @@ React JS Challenge - GSynergy
 This is a Progressive Web App (PWA) built using React + TypeScript + Redux, featuring data management, visualization, and analytics. The app includes functionalities like store & SKU management, AG-Grid-based planning, and chart visualization.
 
 🚀 Live Demo
-🔗 Deployed App (Add your hosting link here)
+🔗 Deployed App :- https://gs-756617-suyash-mishra.vercel.app/
+🎥 Video URL - https://youtu.be/YLDedo8gU4U
 
 ⚙️ How to Run Locally
 1️⃣ Clone the Repository
@@ -49,13 +50,12 @@ npm run build
 🔹 Improved UI Design (More animations & responsiveness)
 
 📹 Demo Video
-🔗 Watch Here (Upload your video to a shareable platform and add the link)
+🔗 Watch Here : https://youtu.be/YLDedo8gU4U
 
 📧 Submission Details
-GitHub Repository: 🔗 Link
-Live App: 🔗 Deployed Link
+GitHub Repository: 🔗 https://github.com/suyashmishra9/GS756617_Suyash_Mishra
+Live App: 🔗 https://gs-756617-suyash-mishra.vercel.app/
 
-Demo Video: 🎥 Watch Here
 📣 Feedback for GSynergy
 🔹 The challenge was well-structured and covered real-world use cases.
 🔹 CI/CD & Authentication as optional are great additions, but clearer setup guidelines would help.
