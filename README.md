@@ -11,7 +11,6 @@ This is a Progressive Web App (PWA) built using React + TypeScript + Redux, feat
 
 ⚙️ How to Run Locally
 1️⃣ Clone the Repository
-git clone https://github.com/yourusername/GS######_YourFirstName_YourLastName.git
 cd GS756617_Suyash_Mishra
 
 2️⃣ Install Dependencies
