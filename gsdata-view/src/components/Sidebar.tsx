@@ -13,7 +13,7 @@ const Sidebar = () => {
             }`
           }
         >
-          <FaStore className="text-lg" />
+          <FaStore className="text-lg" data-testid="store-icon" />
           Store
         </NavLink>
 
@@ -25,7 +25,7 @@ const Sidebar = () => {
             }`
           }
         >
-          <FaBox className="text-lg" />
+          <FaBox className="text-lg" data-testid="sku-icon" />
           SKU
         </NavLink>
 
@@ -37,7 +37,7 @@ const Sidebar = () => {
             }`
           }
         >
-          <FaClipboardList className="text-lg" />
+          <FaClipboardList className="text-lg" data-testid="planning-icon" />
           Planning
         </NavLink>
 
@@ -49,7 +49,7 @@ const Sidebar = () => {
             }`
           }
         >
-          <FaChartBar className="text-lg" />
+          <FaChartBar className="text-lg" data-testid="charts-icon" />
           Charts
         </NavLink>
       </nav>
