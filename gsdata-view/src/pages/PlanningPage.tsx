@@ -137,15 +137,16 @@ const PlanningPage: React.FC = () => {
 
   return (
     <Box sx={{ height: 500, width: "100%", overflowX: "auto", position: "relative", zIndex: 1 }}>
-    <DataGrid
-      rows={rows}
-      columns={columns}
-      processRowUpdate={processRowUpdate}
-      experimentalFeatures={{ columnGrouping: true }}
-      columnGroupingModel={columnGroupingModel}
-    />
-  </Box>
-  
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        processRowUpdate={processRowUpdate}
+        experimentalFeatures={{ columnGrouping: true } as any} 
+        columnGroupingModel={columnGroupingModel}
+      />
+
+    </Box>
+
 
   );
 };
