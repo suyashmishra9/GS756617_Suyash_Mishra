@@ -20,8 +20,8 @@ const ChartPage: React.FC = () => {
       </Typography>
 
       {/* Store Selection Dropdown */}
-      <Select 
-        value={selectedStore} 
+      <Select
+        value={selectedStore}
         onChange={(e) => setSelectedStore(e.target.value)}
         sx={{ marginBottom: 3, width: 200 }}
       >
@@ -38,11 +38,11 @@ const ChartPage: React.FC = () => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="week" />
           <YAxis yAxisId="left" label={{ value: "GM Dollars", angle: -90, position: "insideLeft" }} />
-          <YAxis 
-            yAxisId="right" 
-            orientation="right" 
-            label={{ value: "GM %", angle: -90, position: "insideRight" }} 
-            tickFormatter={(value) => `${value}%`} 
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            label={{ value: "GM %", angle: -90, position: "insideRight" }}
+            tickFormatter={(value) => `${value}%`}
           />
           <Tooltip />
           <Legend />
@@ -51,14 +51,14 @@ const ChartPage: React.FC = () => {
           <Bar yAxisId="left" dataKey="gmDollars" fill="#8884d8" name="GM Dollars" />
 
           {/* GM % (Line) - Orange */}
-          <Line 
-            yAxisId="right" 
-            type="monotone" 
-            dataKey="gmPercent" 
-            stroke="#ff7300" 
-            strokeWidth={2} 
-            dot={false} 
-            name="GM %" 
+          <Line
+            yAxisId="right"
+            type="monotone"
+            dataKey="gmPercent"
+            stroke="#ff7300"
+            strokeWidth={2}
+            dot={false}
+            name="GM %"
           />
         </ComposedChart>
       </ResponsiveContainer>
