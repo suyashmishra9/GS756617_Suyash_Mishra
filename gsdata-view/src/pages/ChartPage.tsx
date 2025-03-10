@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { selectGMDataByStore } from "../redux/slices/planningSlice";
 import {
-  LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, Legend,
+   Line,  Bar, XAxis, YAxis, Tooltip, Legend,
   ResponsiveContainer, CartesianGrid, ComposedChart
 } from "recharts";
 import { Box, Select, MenuItem, Typography } from "@mui/material";

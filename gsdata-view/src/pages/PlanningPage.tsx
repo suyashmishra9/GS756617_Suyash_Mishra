@@ -112,7 +112,7 @@ const PlanningPage: React.FC = () => {
         field: `${week}_gmPercent`,
         headerName: "GM Percent",
         width: 130,
-        cellClassName: (params) => {
+        cellClassName: (params: any) => {
           const rawValue = params.value ? params.value.replace("%", "").trim() : "";
           const value = rawValue ? parseFloat(rawValue) : null;
   
