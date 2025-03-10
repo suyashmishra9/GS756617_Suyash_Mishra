@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridColumnGroupingModel } from "@mui/x-data-grid";
 import { RootState } from "../redux/store";
 import { Box } from "@mui/material";
 
@@ -10,11 +10,10 @@ interface PlanningRow {
   skuName: string;
   price: number;
   cost: number;
-  salesUnit: number | "";
-  salesDollars: number | "";
-  gmDollars: number | "";
-  gmPercent: string;
+  [key: string]: string | number | "";
 }
+
+const weeks = ["week1", "week2", "week3", "week4"];
 
 const PlanningPage: React.FC = () => {
   const stores = useSelector((state: RootState) => state.store.stores);
@@ -24,94 +23,130 @@ const PlanningPage: React.FC = () => {
   useEffect(() => {
     if (stores.length > 0 && skus.length > 0) {
       const planningData: PlanningRow[] = stores.flatMap((store) =>
-        skus.map((sku) => ({
-          id: `${store.id}-${sku.id}`, 
-          storeName: store.name,
-          skuName: sku.name,
-          price: sku.price,
-          cost: sku.cost,
-          salesUnit: "",
-          salesDollars: "",
-          gmDollars: "",
-          gmPercent: "",
-        }))
+        skus.map((sku) => {
+          const baseRow: PlanningRow = {
+            id: `${store.id}-${sku.id}`,
+            storeName: store.name,
+            skuName: sku.name,
+            price: sku.price,
+            cost: sku.cost,
+          };
+
+          // Initialize week fields
+          weeks.forEach((week) => {
+            baseRow[`${week}_salesUnit`] = "";
+            baseRow[`${week}_salesDollars`] = "";
+            baseRow[`${week}_gmDollars`] = "";
+            baseRow[`${week}_gmPercent`] = "";
+          });
+
+          return baseRow;
+        })
       );
       setRows(planningData);
     }
   }, [stores, skus]);
 
   const processRowUpdate = (updatedRow: PlanningRow, originalRow: PlanningRow) => {
-    const salesUnit = Number(updatedRow.salesUnit) || 0;
-    const salesDollars = salesUnit * originalRow.price;
-    const gmDollars = salesDollars - salesUnit * originalRow.cost;
-    const gmPercent = salesDollars ? `${((gmDollars / salesDollars) * 100).toFixed(2)}%` : "";
+    const newRow = { ...updatedRow };
 
-    const newRow: PlanningRow = { ...updatedRow, salesDollars, gmDollars, gmPercent };
+    weeks.forEach((week) => {
+      const salesUnit = Number(newRow[`${week}_salesUnit`]) || 0;
+      const salesDollars = salesUnit * originalRow.price;
+      const gmDollars = salesDollars - salesUnit * originalRow.cost;
+      const gmPercent = salesDollars ? `${((gmDollars / salesDollars) * 100).toFixed(2)}%` : "";
+
+      newRow[`${week}_salesDollars`] = salesDollars;
+      newRow[`${week}_gmDollars`] = gmDollars;
+      newRow[`${week}_gmPercent`] = gmPercent;
+    });
 
     setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === originalRow.id ? { ...row, ...newRow } : row 
-      )
+      prevRows.map((row) => (row.id === originalRow.id ? newRow : row))
     );
 
-    return newRow; 
-  };
-
-  const handleCellEdit = (params: { id: string; field: string; value: any }) => {
-    if (params.field === "salesUnit") {
-      setRows((prevRows) =>
-        prevRows.map((row) => {
-          if (row.id === params.id) {
-            const salesUnit = Number(params.value) || 0;
-            const salesDollars = salesUnit * row.price;
-            const gmDollars = salesDollars - salesUnit * row.cost;
-            const gmPercent = salesDollars ? `${((gmDollars / salesDollars) * 100).toFixed(2)}%` : "";
-
-            return { ...row, salesUnit, salesDollars, gmDollars, gmPercent };
-          }
-          return row;
-        })
-      );
-    }
+    return newRow;
   };
 
   const columns: GridColDef[] = [
     { field: "storeName", headerName: "Store", width: 150 },
     { field: "skuName", headerName: "SKU", width: 150 },
+    ...weeks.flatMap((week) => [
+      {
+        field: `${week}_salesUnit`,
+        headerName: "Sales Unit",
+        width: 100,
+        editable: true,
+      },
+      {
+        field: `${week}_salesDollars`,
+        headerName: "Sales Dollars",
+        width: 120,
+      },
+      {
+        field: `${week}_gmDollars`,
+        headerName: "GM $",
+        width: 100,
+      },
+      {
+        field: `${week}_gmPercent`,
+        headerName: "GM %",
+        width: 100,
+      },
+    ]),
+  ];
+
+  const columnGroupingModel: GridColumnGroupingModel = [
     {
-      field: "salesUnit",
-      headerName: "Sales Unit",
-      width: 120,
-      editable: true, // ✅ Allows inline editing
+      groupId: "Week 1",
+      children: [
+        { field: "week1_salesUnit" },
+        { field: "week1_salesDollars" },
+        { field: "week1_gmDollars" },
+        { field: "week1_gmPercent" },
+      ],
     },
     {
-      field: "salesDollars",
-      headerName: "Sales Dollars",
-      width: 120,
-      renderCell: (params: GridRenderCellParams) => <>{params.row.salesDollars || ""}</>,
+      groupId: "Week 2",
+      children: [
+        { field: "week2_salesUnit" },
+        { field: "week2_salesDollars" },
+        { field: "week2_gmDollars" },
+        { field: "week2_gmPercent" },
+      ],
     },
     {
-      field: "gmDollars",
-      headerName: "GM Dollars",
-      width: 120,
-      renderCell: (params: GridRenderCellParams) => <>{params.row.gmDollars || ""}</>,
+      groupId: "Week 3",
+      children: [
+        { field: "week3_salesUnit" },
+        { field: "week3_salesDollars" },
+        { field: "week3_gmDollars" },
+        { field: "week3_gmPercent" },
+      ],
     },
     {
-      field: "gmPercent",
-      headerName: "GM %",
-      width: 120,
-      renderCell: (params: GridRenderCellParams) => <>{params.row.gmPercent || ""}</>,
+      groupId: "Week 4",
+      children: [
+        { field: "week4_salesUnit" },
+        { field: "week4_salesDollars" },
+        { field: "week4_gmDollars" },
+        { field: "week4_gmPercent" },
+      ],
     },
   ];
 
   return (
-    <Box sx={{ height: 500, width: "100%" }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        processRowUpdate={processRowUpdate} // ✅ Ensures calculations update correctly
-      />
-    </Box>
+    <Box sx={{ height: 500, width: "100%", overflowX: "auto", position: "relative", zIndex: 0 }}>
+    <DataGrid
+      rows={rows}
+      columns={columns}
+      processRowUpdate={processRowUpdate}
+      experimentalFeatures={{ columnGrouping: true }}
+      columnGroupingModel={columnGroupingModel}
+    />
+  </Box>
+  
+
   );
 };
 
