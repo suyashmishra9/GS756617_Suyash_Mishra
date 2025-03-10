@@ -25,33 +25,45 @@ const PlanningPage: React.FC = () => {
 
   useEffect(() => {
     const savedRows = localStorage.getItem("planningRows");
-    if (savedRows) {
-      dispatch(setRows(JSON.parse(savedRows)));
-    } else if (stores.length > 0 && skus.length > 0) {
-      const planningData: PlanningRow[] = stores.flatMap((store) =>
-        skus.map((sku) => {
-          const baseRow: PlanningRow = {
-            id: `${store.id}-${sku.id}`,
-            storeName: store.name,
-            skuName: sku.name,
-            price: sku.price,
-            cost: sku.cost,
-          };
-
-          // Initialize week fields
-          weeks.forEach((week) => {
-            baseRow[`${week}_salesUnit`] = "";
-            baseRow[`${week}_salesDollars`] = "";
-            baseRow[`${week}_gmDollars`] = "";
-            baseRow[`${week}_gmPercent`] = "";
-          });
-
-          return baseRow;
-        })
-      );
-      dispatch(setRows(planningData));
-    }
+    let existingRows: PlanningRow[] = savedRows ? JSON.parse(savedRows) : [];
+  
+    // Create a map of existing rows for easy lookup
+    const existingRowMap = new Map(existingRows.map(row => [row.id, row]));
+  
+    // Generate new rows based on current stores and SKUs
+    const newRows: PlanningRow[] = stores.flatMap(store =>
+      skus.map(sku => {
+        const rowId = `${store.id}-${sku.id}`;
+  
+        // If row already exists, keep the previous data
+        if (existingRowMap.has(rowId)) {
+          return existingRowMap.get(rowId)!;
+        }
+  
+        // Otherwise, create a new row
+        const baseRow: PlanningRow = {
+          id: rowId,
+          storeName: store.name,
+          skuName: sku.name,
+          price: sku.price,
+          cost: sku.cost,
+        };
+  
+        weeks.forEach(week => {
+          baseRow[`${week}_salesUnit`] = "";
+          baseRow[`${week}_salesDollars`] = "";
+          baseRow[`${week}_gmDollars`] = "";
+          baseRow[`${week}_gmPercent`] = "";
+        });
+  
+        return baseRow;
+      })
+    );
+  
+    dispatch(setRows(newRows));
+    localStorage.setItem("planningRows", JSON.stringify(newRows));
   }, [stores, skus, dispatch]);
+  
 
   const processRowUpdate = (updatedRow: PlanningRow, originalRow: PlanningRow) => {
     const newRow = { ...updatedRow };
@@ -89,8 +101,7 @@ const PlanningPage: React.FC = () => {
       {
         field: `${week}_salesDollars`,
         headerName: "Sales Dollars",
-        width: 130, 
-        
+        width: 130,
       },
       {
         field: `${week}_gmDollars`,
@@ -101,9 +112,26 @@ const PlanningPage: React.FC = () => {
         field: `${week}_gmPercent`,
         headerName: "GM Percent",
         width: 130,
+        cellClassName: (params) => {
+          const rawValue = params.value ? params.value.replace("%", "").trim() : "";
+          const value = rawValue ? parseFloat(rawValue) : null;
+  
+          if (value === null || isNaN(value)) return "bg-white text-black"; // Default white background
+  
+          return value >= 40
+            ? "bg-green-300 text-black"
+            : value >= 10 && value < 40
+            ? "bg-yellow-300 text-black"
+            : value > 5 && value < 10
+            ? "bg-orange-300 text-black"
+            : "bg-red-300 text-black";
+        },
       },
     ]),
   ];
+  
+
+  
 
   const columnGroupingModel: GridColumnGroupingModel = [
     {
